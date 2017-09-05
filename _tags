@@ -1,0 +1,6 @@
+true: warn(@5@8@10@11@12@14@23@24@29)
+true: bin_annot, strict_sequence, debug
+
+"lib": include
+
+<lib/*.*>: package(higher delimcc)

@@ -1,0 +1,22 @@
+opam-version: "1.2"
+name: "metaocaml-syb"
+version: "dev"
+maintainer: "yallop@gmail.com"
+author: "yallop@gmail.com"
+homepage: "https://github.com/yallop/metaocaml-syb"
+dev-repo: "http://github.com/yallop/metaocaml-syb.git"
+bug-reports: "http://github.com/yallop/metaocaml-syb/issues"
+license: "MIT"
+build: [make]
+install: [make "install"]
+remove: [make "uninstall"]
+build-test: [make "test"]
+depends: [
+   "ounit" {build}
+   "ocamlfind" {build}
+   "higher"
+   "delimcc"
+   "genlet"
+   "ounit"
+]
+available: [ compiler = "4.02.1+modular-implicits-ber" ]

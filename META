@@ -1,0 +1,10 @@
+version = "0.1"
+description = "Staged Generic Programming"
+requires = "genlet higher delimcc"
+archive(byte) = "metasyb_staged.cma"
+archive(byte, plugin) = "metasyb_staged.cma"
+archive(native) = "metasyb_staged.cmxa"
+archive(native, plugin) = "metasyb_staged.cmxs"
+exists_if = "metasyb_staged.cma"
+
+
