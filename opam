@@ -1,22 +1,24 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "metaocaml-syb"
+synopsis: "Staged version of the Scrap Your Boilerplate library"
 version: "dev"
 maintainer: "yallop@gmail.com"
 author: "yallop@gmail.com"
 homepage: "https://github.com/yallop/metaocaml-syb"
-dev-repo: "http://github.com/yallop/metaocaml-syb.git"
+dev-repo: "git+https://github.com/yallop/metaocaml-syb.git"
 bug-reports: "http://github.com/yallop/metaocaml-syb/issues"
 license: "MIT"
 build: [make]
-install: [make "install"]
+install: [[make "install"]
+          [make "test"] {with-test} ]
 remove: [make "uninstall"]
-build-test: [make "test"]
 depends: [
-   "ounit" {build}
    "ocamlfind" {build}
    "higher"
    "delimcc"
    "genlet"
    "ounit"
+   "ocaml-variants"
+     {= "4.02.1+modular-implicits-ber" }
 ]
-available: [ compiler = "4.02.1+modular-implicits-ber" ]
+
