@@ -1,6 +1,6 @@
-open Syb_common
-open Syb_classes
-open Metasyb_classes_
+open Common
+open Classes
+open Classes_
 open Partially_static
 
 (** Apply a transformation everywhere in bottom-up manner *)

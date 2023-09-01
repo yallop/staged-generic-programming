@@ -16,7 +16,7 @@ type constructor =
   | Name of string
   | Dyn of string code
 
-let rec to_string_ps = function
+let to_string_ps = function
     Cons -> sta "::"
   | Tuple _ -> sta "()"
   | Record fields -> let s = "{"^ String.concat "; "

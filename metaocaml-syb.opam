@@ -8,16 +8,16 @@ homepage: "https://github.com/yallop/metaocaml-syb"
 dev-repo: "git+https://github.com/yallop/metaocaml-syb.git"
 bug-reports: "http://github.com/yallop/metaocaml-syb/issues"
 license: "MIT"
-build: [make]
-install: [[make "install"]
-          [make "test"] {with-test} ]
-remove: [make "uninstall"]
+build: [
+    ["dune" "subst"] {dev}
+    ["dune" "build" "-p" name "-j" jobs]
+    ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
 depends: [
-   "ocamlfind" {build}
+   "dune" {build}
    "higher"
    "delimcc"
    "genlet"
-   "ounit"
    "ocaml-variants"
      {= "4.02.1+modular-implicits-ber" }
 ]

@@ -1,14 +1,14 @@
 open Higher
-open Syb_common
-open Syb_classes
-open Metasyb_classes_
+open Common
+open Classes
+open Classes_
 
 let letrec k =
-  let r = Metasyb_bindings.genlet (.< ref (fun _ -> assert false) >.) in
-  let _ : unit code = Metasyb_bindings.genlet (.<.~r := .~(k .< ! .~r >.) >.) in
+  let r = Bindings_.genlet (.< ref (fun _ -> assert false) >.) in
+  let _ : unit code = Bindings_.genlet (.<.~r := .~(k .< ! .~r >.) >.) in
   .< ! .~r >.
 
-implicit module Typeable_of_data{A:DATA_} = Syb_instances.Typeable_of_data{A}
+implicit module Typeable_of_data{A:DATA_} = Instances.Typeable_of_data{A}
 
 module Memofix  (Elem: sig type (_,_) t end) =
 struct
@@ -36,11 +36,11 @@ struct
       match lookup !tbl, D.peers with
         Some g, _ -> .< .~g .~x >.
       | None, lazy [] ->
-         let g = Metasyb_bindings.genlet .< fun y -> .~(openf result .< y >.) >. in
+         let g = Bindings_.genlet .< fun y -> .~(openf result .< y >.) >. in
          add tbl g;
          .< .~g .~x >.
       | None, lazy [_] ->
-         let g = Metasyb_bindings.genletrec1 @@ fun self ->
+         let g = Bindings_.genletrec1 @@ fun self ->
                  add tbl self;
                  fun y -> openf result y
          in .< .~g .~x >.
@@ -75,7 +75,7 @@ struct
 
   let add {T:TYPEABLE} t c = t := Cons ((module T), Dyn c, !t)
 
-  let rec lookup : type a. {T:TYPEABLE} -> t -> T.t elem option =
+  let rec lookup : type _a. {T:TYPEABLE} -> t -> T.t elem option =
     fun {T: TYPEABLE} -> function
         Nil -> None
       | Cons ((module R), d, rest) ->
@@ -93,7 +93,7 @@ struct
       | None, lazy [] ->
         openf result {D} x
       | None, lazy [_] ->
-         let g = Metasyb_bindings.genletrec1 @@ fun self ->
+         let g = Bindings_.genletrec1 @@ fun self ->
                  add tbl self;
                  fun y -> R.cd (openf result y)
          in R.dyn .< .~g .~x >.
@@ -139,7 +139,7 @@ include struct
 
     let add {T:TYPEABLE} t c = t := Cons ((module T), c, !t)
 
-    let rec lookup : type a. {T:TYPEABLE} -> t -> T.t elem option =
+    let rec lookup : type _a. {T:TYPEABLE} -> t -> T.t elem option =
       fun {T: TYPEABLE} -> function
           Nil -> None
         | Cons ((module R), d, rest) ->
@@ -192,7 +192,7 @@ include struct
             M.zero
           end
         | [_]  ->
-           let g = Metasyb_bindings.genletrec1 @@ fun self ->
+           let g = Bindings_.genletrec1 @@ fun self ->
                    add tbl (Dyn self);
                    fun y -> R.cd (q (gfixQ2_ps_ q) y)
            in R.dyn .< .~g .~y >.
@@ -211,8 +211,8 @@ end
 
 let gfixQ3_ {P:PS} (k : P.t genericQ_ -> ({D:DATA_} -> D.t_ -> P.t)) =
   gfixQ2_ {P} (fun self {D:DATA_} x ->
-  Metasyb_bindings.reify {P} {D} x @@ fun x -> k self x)
+  Bindings_.reify {P} {D} x @@ fun x -> k self x)
 
 let gfixQ3_ps_ {P:PS} {M:MONOID with type t = P.t} (k : P.t genericQ_ -> ({D:DATA_} -> D.t_ -> P.t)) =
   gfixQ2_ps_ {P} {M} (fun self {D:DATA_} x ->
-  Metasyb_bindings.reify {P} {D} x @@ fun x -> k self x)
+  Bindings_.reify {P} {D} x @@ fun x -> k self x)

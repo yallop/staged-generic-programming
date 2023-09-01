@@ -1,9 +1,8 @@
-open Syb_common
-open Syb_classes
-open Syb_instances
-open Metasyb_classes_
-open Metasyb_constructors_
-open Metasyb_bindings
+open Common
+open Instances
+open Classes_
+open Constructors_
+open Bindings_
 open Partially_static
 
 implicit module Data_int =
@@ -14,7 +13,7 @@ struct
   let reflect c = c
   let gmapT_ _ x = x
   let gmapQ_ _ _ = []
-  let gfoldl_ (g : _ genericFapp_) (u : _ genericFunit_) x = u#u x
+  let gfoldl_ (_ : _ genericFapp_) (u : _ genericFunit_) x = u#u x
   let gmapM_ {M:MONAD_} _ (m : t code) = M.return_ m
   let constructor_ x = dconstructor .< string_of_int .~x >.
   let peers = lazy []
@@ -28,9 +27,9 @@ struct
   let reflect = function false -> .< false >. | true -> .< true >.
   let gmapT_ _ x = x
   let gmapQ_ _ _ = []
-  let gfoldl_ (g : _ genericFapp_) (u : _ genericFunit_) x = u#u x
+  let gfoldl_ (_ : _ genericFapp_) (u : _ genericFunit_) x = u#u x
   let gmapM_ {M:MONAD_} _ (m : t code) = M.return_ m
-  let constructor_ c = Metasyb_constructors_.constructor (string_of_bool c)
+  let constructor_ c = Constructors_.constructor (string_of_bool c)
   let peers = lazy []
 end
 
@@ -42,7 +41,7 @@ struct
   let reflect c = c
   let gmapT_ _ x = x
   let gmapQ_ _ _ = []
-  let gfoldl_ (g : _ genericFapp_) (u : _ genericFunit_) x = u#u x
+  let gfoldl_ (_ : _ genericFapp_) (u : _ genericFunit_) x = u#u x
   let gmapM_ {M:MONAD_} _ (m : t code) = M.return_ m
   let constructor_ x = dconstructor .< string_of_float .~x >.
   let peers = lazy []
@@ -56,7 +55,7 @@ struct
   let reflect c = c
   let gmapT_ _ x = x
   let gmapQ_ _ _ = []
-  let gfoldl_ (g : _ genericFapp_) (u : _ genericFunit_) x = u#u x
+  let gfoldl_ (_ : _ genericFapp_) (u : _ genericFunit_) x = u#u x
   let gmapM_ {M:MONAD_} _ (m : t code) = M.return_ m
   let constructor_ x = dconstructor .< Printf.sprintf "%S" .~x >.
   let peers = lazy []
@@ -111,7 +110,7 @@ struct
                         return_ .<.~y :: .~ys>.) >.
 
     let constructor_ = function
-        Nil -> Metasyb_constructors_.constructor "[]"
+        Nil -> Constructors_.constructor "[]"
       | Cons (_,_) -> Cons
 
     let peers : (module DATA_) list Lazy.t = lazy [
@@ -189,8 +188,8 @@ struct
         None -> .~(return_ .<None>.)
       | Some x -> .~(f .<x>. >>== fun x' -> return_ .<Some .~x'>.) >.
   let constructor_ = function
-      None' -> Metasyb_constructors_.constructor "None"
-    | Some' _ -> Metasyb_constructors_.constructor "Some"
+      None' -> Constructors_.constructor "None"
+    | Some' _ -> Constructors_.constructor "Some"
   let peers = lazy []
 end
 
@@ -236,8 +235,8 @@ struct
       | Right x -> .~(f .<x>. >>== fun y -> return_ .< Right .~y >.) >.
 
   let constructor_ = function
-      Left_ _ -> Metasyb_constructors_.constructor "Left"
-    | Right_ _ -> Metasyb_constructors_.constructor "Right"
+      Left_ _ -> Constructors_.constructor "Left"
+    | Right_ _ -> Constructors_.constructor "Right"
 
   let peers = lazy []
 end

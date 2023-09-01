@@ -18,10 +18,10 @@ The following examples assume that you have loaded the package and brought the i
 
 ```ocaml
 # #require "metaocaml-syb";;
-# open Metasyb_instances_;;
-# open Metasyb_schemes_;;
-# open Metasyb_instantiate;;
-# open Partially_static;;
+# open Metaocaml_syb.Instances_;;
+# open Metaocaml_syb.Schemes;;
+# open Metaocaml_syb.Instantiate;;
+# open Metaocaml_syb.Partially_static;;
 ```
 
 

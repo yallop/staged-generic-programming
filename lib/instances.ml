@@ -1,6 +1,5 @@
-open Syb_common
-open Syb_constructors
-open Syb_classes
+open Common
+open Classes
 
 (* Some primitive typeable instances *)
 type _ type_rep += List : 'a type_rep -> 'a list type_rep
@@ -83,8 +82,8 @@ struct
   module Typeable = Typeable_int
   let gmapT _ x = x
   let gmapQ _ _ = []
-  let gfoldl (g : _ genericFapp) (u : _ genericFunit) x = u#u x
-  let constructor x = Syb_constructors.constructor (string_of_int x)
+  let gfoldl (_g : _ genericFapp) (u : _ genericFunit) x = u#u x
+  let constructor x = Constructors.constructor (string_of_int x)
 end
 
 implicit module Data_bool =
@@ -94,8 +93,8 @@ struct
   module Typeable = Typeable_bool
   let gmapT _ x = x
   let gmapQ _ _ = []
-  let gfoldl (g : _ genericFapp) (u : _ genericFunit) x = u#u x
-  let constructor x = Syb_constructors.constructor (string_of_bool x)
+  let gfoldl (_g : _ genericFapp) (u : _ genericFunit) x = u#u x
+  let constructor x = Constructors.constructor (string_of_bool x)
 end
 
 implicit module Data_float =
@@ -105,8 +104,8 @@ struct
   module Typeable = Typeable_float
   let gmapT _ x = x
   let gmapQ _ _ = []
-  let gfoldl (g : _ genericFapp) (u : _ genericFunit) x = u#u x
-  let constructor x = Syb_constructors.constructor (string_of_float x)
+  let gfoldl (_g : _ genericFapp) (u : _ genericFunit) x = u#u x
+  let constructor x = Constructors.constructor (string_of_float x)
 end
 
 implicit module Data_string =
@@ -116,8 +115,8 @@ struct
   module Typeable = Typeable_string
   let gmapT _ x = x
   let gmapQ _ _ = []
-  let gfoldl (g : _ genericFapp) (u : _ genericFunit) x = u#u x
-  let constructor x = Syb_constructors.constructor (Printf.sprintf "%S" x)
+  let gfoldl (_g : _ genericFapp) (u : _ genericFunit) x = u#u x
+  let constructor x = Constructors.constructor (Printf.sprintf "%S" x)
 end
 
 implicit module Data_list {A: DATA} : DATA with type t = A.t list =
@@ -143,8 +142,8 @@ struct
       | x :: xs -> g#g {R} (g#g (u#u (fun x xs -> x :: xs)) x) xs
 
     let constructor = function
-        [] -> Syb_constructors.constructor "[]"
-      | _::_ -> Syb_constructors.Cons
+        [] -> Constructors.constructor "[]"
+      | _::_ -> Constructors.Cons
   end
   include R
 end
@@ -159,7 +158,7 @@ struct
   let gmapQ (q : _ genericQ) ((x, y) : t) = [q x; q y]
   let gfoldl (g : _ genericFapp) (u : _ genericFunit) (x, y) =
     g#g {B} (g#g {A} (u#u (fun x y -> (x,y))) x) y
-  let constructor _ = Syb_constructors.Tuple 2
+  let constructor _ = Constructors.Tuple 2
 end
 
 implicit module Data_option {A: DATA} : DATA with type t = A.t option =
@@ -175,8 +174,8 @@ struct
       None -> u#u None
     | Some x -> g#g {A} (u#u (fun x -> Some x)) x
   let constructor = function
-      None -> Syb_constructors.constructor "None"
-    | Some _ -> Syb_constructors.constructor "Some"
+      None -> Constructors.constructor "None"
+    | Some _ -> Constructors.constructor "Some"
 end
 
 implicit module Data_either {A: DATA} {B: DATA} : DATA with type t = (A.t, B.t) either =
@@ -196,8 +195,8 @@ struct
      Left x -> g#g {A} (u#u (fun x -> Left x)) x
    | Right y -> g#g {B} (u#u (fun x -> Right x)) y
   let constructor = function
-     Left _ -> Syb_constructors.constructor "Left"
-   | Right _ -> Syb_constructors.constructor "Right"
+     Left _ -> Constructors.constructor "Left"
+   | Right _ -> Constructors.constructor "Right"
 end
 
 

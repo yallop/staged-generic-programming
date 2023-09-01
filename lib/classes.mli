@@ -32,7 +32,7 @@ sig
     val gmapT  : genericT  -> t      -> t
     val gmapQ  : 'u genericQ  -> t      -> 'u list
     val gfoldl : 'c genericFapp -> 'c genericFunit -> t -> (t, 'c) app
-    val constructor : t      -> Syb_constructors.constructor
+    val constructor : t      -> Constructors.constructor
   end
 end
 type    genericT  = R.genericT
@@ -49,7 +49,7 @@ val gmapQ  : 'u genericQ -> 'u list genericQ
 val gfoldl  : 'c genericFapp -> 'c genericFunit ->
               {T: DATA} -> T.t -> (T.t, 'c) app
 
-val constructor  : Syb_constructors.constructor genericQ
+val constructor  : Constructors.constructor genericQ
 
 val mkT  : {T:TYPEABLE} -> (T.t -> T.t) -> genericT
 

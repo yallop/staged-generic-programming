@@ -1,0 +1,18 @@
+(library
+ (name metaocaml_syb)
+ (public_name metaocaml-syb)
+ (libraries genlet higher delimcc)
+ (modules
+   Bindings_
+   Classes
+   Classes_
+   Common
+   Constructors
+   Constructors_
+   Fixpoints
+   Instances
+   Instances_
+   Instantiate
+   Partially_static
+   Schemes
+   Staged))

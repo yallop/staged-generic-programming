@@ -1,6 +1,6 @@
 open Higher
 open Partially_static
-open Metasyb_constructors_
+open Constructors_
 
 (** Support for monadic traversals over partially-static data. *) 
 
@@ -19,7 +19,7 @@ val (>>==)  : {M:MONAD_} ->
 
 module rec R :
 sig
-  include module type of Syb_classes.R
+  include module type of Classes.R
   type    genericT_ = {T: R.DATA_} -> T.t code -> T.t code
   type 'u genericQ_ = {T: R.DATA_} -> T.t code -> 'u
   type 'c genericFapp_  =
@@ -34,7 +34,7 @@ sig
                   (t_ -> P.t) ->
                   P.t
     val reflect : t_ -> t code
-    include Syb_classes.R.DATA with type t := t
+    include Classes.R.DATA with type t := t
     val gmapT_ : genericT_ -> t_ -> t_
     val gmapQ_ : 'u genericQ_ -> t_ -> 'u list
     val gfoldl_ : 'c genericFapp_ -> 'c genericFunit_ -> t code -> (t, 'c) app code
@@ -66,9 +66,9 @@ val gmapM_ : {M:MONAD_} -> M.t genericM_ -> M.t genericM_
 
 val constructor_ : {D:DATA_} -> D.t_ -> constructor
 
-val mkT_ : {T:Syb_classes.TYPEABLE} -> (T.t code -> T.t code) -> genericT_
+val mkT_ : {T:Classes.TYPEABLE} -> (T.t code -> T.t code) -> genericT_
 
-val mkQ_ : {T:Syb_classes.TYPEABLE} -> 'u -> (T.t code -> 'u) -> 'u genericQ_
+val mkQ_ : {T:Classes.TYPEABLE} -> 'u -> (T.t code -> 'u) -> 'u genericQ_
 
-val mkM_ : {M:MONAD_} -> {B:Syb_classes.TYPEABLE} -> (B.t code -> (B.t, M.t) app code) ->
+val mkM_ : {M:MONAD_} -> {B:Classes.TYPEABLE} -> (B.t code -> (B.t, M.t) app code) ->
           M.t genericM_

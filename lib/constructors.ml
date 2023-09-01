@@ -10,7 +10,7 @@ type constructor =
   | Record of field_info list
   | Name of string
 
-let rec to_string = function
+let to_string = function
     Cons -> "::"
   | Tuple _ -> "()"
   | Record fields -> "{"^ String.concat "; "

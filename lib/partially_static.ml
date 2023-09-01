@@ -1,4 +1,4 @@
-open Syb_common
+open Common
 
 type partial_equality = EQ | NEQ | UNKNOWN
 
@@ -107,6 +107,9 @@ struct
   let zero = Empty
   (* let sta : sta -> t = fun s -> SCons (T.sta s, Empty) *)
   let dyn : _ = fun s -> DCons ([s], Empty)
+
+  (* avoid "unused value dyn" warning *)
+  let () = T.dyn
 
   let scons (s : T.t) : t -> t = function
     | SCons (s', tl) -> SCons (Msta.(s <+> s'), tl)
@@ -224,7 +227,7 @@ struct
   type sta = int
   let now = function
     | { dyn = []; sta } -> Some sta
-    | { dyn = _::_ } -> None
+    | { dyn = _::_; _ } -> None
   let dyn dyn = { dyn = [dyn] ; sta = 0 }
   let cd = function
       { sta; dyn = [] } -> .< sta >.
@@ -236,7 +239,7 @@ struct
     { sta = lsta + rsta; dyn = ldyn @ rdyn }
   let eq l r = match l, r with
       { sta = l; dyn = []}, { sta = r; dyn = []} when l = r -> EQ
-    | { sta = l; dyn = []}, { sta = r; dyn = []} -> NEQ
+    | { sta = _; dyn = []}, { sta = _; dyn = []} -> NEQ
     | _ -> UNKNOWN
 end
 
@@ -295,7 +298,7 @@ struct
     | Dn _ -> None
   let eq x y = match now x, now y with
     | Some x, Some y when x = y -> EQ
-    | Some x, Some y -> NEQ
+    | Some _, Some _ -> NEQ
     | _ -> UNKNOWN
   let rec cd' = function
     | Dyn x -> x
@@ -320,12 +323,12 @@ struct
     | (None, Some x) | (Some x, None) -> Some x
     | Some x, Some y -> Some (x + y)
 
-  let rec add_sd s d = match d with
+  let add_sd s d = match d with
     | (Dyn _ | Max _) as d -> Add (Some s, [d])
-    | Add (None, ds)       -> assert false(* Add (Some s, ds) *)
-    | Add (Some s', ds)    -> assert false (* Add (Some (s + s'), ds) *)
+    | Add (None, _ds)       -> assert false(* Add (Some s, ds) *)
+    | Add (Some _s', _ds)    -> assert false (* Add (Some (s + s'), ds) *)
 
-  let rec add_dd l r = match l, r with
+  let add_dd l r = match l, r with
       ((Max _ | Dyn _), _)
     | (_, (Max _ | Dyn _)) -> Add (None, [l;r])
     | Add (s1, d1), Add (s2, d2) -> Add (add_opts s1 s2, d1 @ d2)
@@ -341,12 +344,12 @@ struct
     | (None, Some x) | (Some x, None) -> Some x
     | Some x, Some y -> Some (x + y)
 
-  let rec max_sd s d = match d with
+  let max_sd s d = match d with
     | (Dyn _ | Add _) as d -> Max (Some s, [d])
     | Max (None, ds)       -> Max (Some s, ds)
     | Max (Some s', ds)    -> Max (Some (s + s'), ds)
 
-  let rec max_dd l r = match l, r with
+  let max_dd l r = match l, r with
       ((Add _ | Dyn _), _)
     | (_, (Add _ | Dyn _)) -> Max (None, [l;r])
     | Max (s1, d1), Max (s2, d2) -> Max (max_opts s1 s2, d1 @ d2)

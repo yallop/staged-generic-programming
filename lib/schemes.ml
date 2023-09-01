@@ -1,18 +1,14 @@
-open Syb_common
-open Syb_constructors
-open Metasyb_constructors_
-open Metasyb_classes_
-open Metasyb_fixpoints_
-open Metasyb_bindings
+open Common
+open Classes_
+open Fixpoints
+open Bindings_
 open Partially_static
 
-module type TYPEABLE = Syb_classes.TYPEABLE
+module type TYPEABLE = Classes.TYPEABLE
 
 (* Various utilities *)
 let unjust l o = match o with Some x -> x :: l | None -> l
 let singleton = function [s] -> Some s | _ -> None
-let sum l = List.fold_left (+) 0 l
-let maximum = List.fold_left max 0
 
 module Code_ps (S: sig type t end) : PS with type sta = S.t and type t = S.t code =
 struct
@@ -65,7 +61,7 @@ let everywhereBut_ (stop : bool code genericQ_) (f : genericT_) =
 
 
 (** Monadic variation on everywhere *)
-let rec everywhereM_ : {M:MONAD_} -> M.t genericM_ -> M.t genericM_ =
+let everywhereM_ : {M:MONAD_} -> M.t genericM_ -> M.t genericM_ =
   fun {M:MONAD_} (f : M.t genericM_) ->
     gfixM_ (fun (self : M.t genericM_) {X:DATA_} x ->
         gmapM_ self x >>== fun x' -> f x')
@@ -95,7 +91,7 @@ let everythingBut_ (type r) ((@) : r code -> r code -> r code) (stop : _ generic
 let listify_ {R:TYPEABLE} (p : R.t code -> bool code)=
   let implicit module P = PS_code_list(struct type t = R.t end) in
   everything_ {P} {P}
-     (mkQ_ P.zero (fun x -> reify {P} {Metasyb_instances_.Data_bool}  (p x) @@ function
+     (mkQ_ P.zero (fun x -> reify {P} {Instances_.Data_bool}  (p x) @@ function
                       false -> P.zero
                     | true -> P.(sta [x])))
 
@@ -140,7 +136,7 @@ let gcount_ (p : PS_bool.t genericQ_) {T: DATA_} x =
        match p x with
        | Sta false -> M.sta 0
        | Sta true -> M.sta 1
-       | Dyn y -> reify {M} {Metasyb_instances_.Data_bool} y @@ function
+       | Dyn y -> reify {M} {Instances_.Data_bool} y @@ function
            true -> M.sta 1
          | false -> M.sta 0)
     x
@@ -151,7 +147,7 @@ let gnodecount_ {X: DATA_} x = gcount_ (fun {Y: DATA_} _ -> PS_bool.tt) x
 
 
 (** Determine the number of nodes of a given type in a given term *)
-let gtypecount_ {X:TYPEABLE} x = gcount_ (mkQ_ (PS_bool.ff) (fun _ -> PS_bool.tt))
+let gtypecount_ {X:TYPEABLE} _x = gcount_ (mkQ_ (PS_bool.ff) (fun _ -> PS_bool.tt))
 
 
 (** Find (unambiguously) an immediate subterm of a given type *)
@@ -166,5 +162,5 @@ let gfindtype_ {X:TYPEABLE} {D: DATA_} x =
 (** Generic show *)
 let gshow_ = gfixQ2_ {PS_string_monoid} (fun self {D:DATA_} v ->
   (reify {PS_string_monoid} {D} v @@ fun v ->
-    (Metasyb_constructors_.string_of_applied_constructor
+    (Constructors_.string_of_applied_constructor
     (constructor_ v) (gmapQ_ self v))))

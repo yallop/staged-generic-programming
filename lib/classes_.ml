@@ -2,8 +2,8 @@
 
 open Higher
 open Partially_static
-open Syb_classes
-open Metasyb_constructors_
+open Classes
+open Constructors_
 
 module type MONAD_ =
 sig
@@ -23,7 +23,7 @@ let (>>==)  : {M:MONAD_} ->
 (* Implicit instances *)
 module rec R :
 sig
-  include module type of Syb_classes.R
+  include module type of Classes.R
   type    genericT_ = {T: R.DATA_} -> T.t code -> T.t code
   type 'u genericQ_ = {T: R.DATA_} -> T.t code -> 'u
   type 'c genericFapp_  =
@@ -38,7 +38,7 @@ sig
                   (t_ -> P.t) ->
                   P.t
     val reflect : t_ -> t code
-    include Syb_classes.R.DATA with type t := t
+    include Classes.R.DATA with type t := t
     val gmapT_ : genericT_ -> t_ -> t_
     val gmapQ_ : 'u genericQ_ -> t_ -> 'u list
     val gfoldl_ : 'c genericFapp_ -> 'c genericFunit_ -> t code -> (t, 'c) app code

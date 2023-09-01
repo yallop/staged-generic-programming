@@ -1,5 +1,5 @@
-open Syb_common
-open Syb_classes
+open Common
+open Classes
 
 (* Data instances for built-in types *)
 implicit module Data_int : DATA with type t = int

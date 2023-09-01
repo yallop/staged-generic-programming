@@ -1,4 +1,4 @@
-open Metasyb_classes_
+open Classes_
 open Partially_static
 
 val generateT : {D:DATA_} -> genericT_ -> (D.t -> D.t) code

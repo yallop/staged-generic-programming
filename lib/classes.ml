@@ -34,7 +34,7 @@ sig
     val gmapT  : genericT  -> t      -> t
     val gmapQ  : 'u genericQ  -> t      -> 'u list
     val gfoldl : 'c genericFapp -> 'c genericFunit -> t -> (t, 'c) app
-    val constructor : t      -> Syb_constructors.constructor
+    val constructor : t      -> Constructors.constructor
   end
 end = R
 include R
